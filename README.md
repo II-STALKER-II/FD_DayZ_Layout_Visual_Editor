@@ -1,53 +1,147 @@
-# FD DayZ Layout Visual Editor PRO
+# FD DayZ Layout Visual Editor PRO — повна інструкція від A до Я
 
-**FD DayZ Layout Visual Editor PRO** — це візуальний HTML-редактор для GUI `.layout` файлів DayZ.
+Цей документ описує повну історію розробки та використання **FD DayZ Layout Visual Editor PRO**, починаючи з першої тестової версії і до версії **V24 TREE + STYLES + TEMPLATES**.
 
-Програма дозволяє відкривати, переглядати й редагувати DayZ layout-файли без постійного запуску Workbench. Редактор працює прямо в браузері та підходить для створення меню, HUD-вікон, NPC-меню, меню трейдера, штрафстоянки, гаража, craft preview, кнопок, списків, карток транспорту та інших GUI-елементів DayZ.
-
----
-
-## Що вміє редактор
-
-### Основні можливості
-
-* Відкриття `.layout` файлів DayZ
-* Візуальне редагування GUI
-* Переміщення елементів мишкою
-* Зміна розміру елементів
-* Редагування позиції, розміру, кольору, тексту, прозорості
-* Підтримка `PanelWidget`, `TextWidget`, `ButtonWidget`, `ImageWidget`, `ItemPreviewWidget`, `FrameWidget`
-* Дерево всіх widgets
-* Інспектор властивостей
-* Експорт назад у `.layout`
-* Copy layout code
-* Робота повністю локально в браузері
+Редактор створений для роботи з GUI `.layout` файлами DayZ. Він відкривається прямо в браузері як HTML-файл і дозволяє візуально редагувати позиції, розміри, кольори, тексти, кнопки, панелі, списки, ItemPreviewWidget та інші елементи DayZ GUI.
 
 ---
 
-## Основні функції
+# 1. Що це за програма
 
-### Visual Editor
+**FD DayZ Layout Visual Editor PRO** — це візуальний редактор DayZ GUI layout-файлів.
 
-Редактор показує GUI-вікно на сцені. Кожен widget можна вибрати, рухати, змінювати розмір і редагувати через праву панель.
+Він потрібен для того, щоб не редагувати `.layout` тільки вручну в тексті, а бачити GUI приблизно так, як він буде виглядати в грі.
 
-Можна редагувати:
+Редактор допомагає:
+
+- відкривати `.layout`;
+- бачити структуру widgets;
+- рухати елементи мишкою;
+- змінювати розмір;
+- редагувати колір і прозорість;
+- бачити текст, кнопки, панелі;
+- перевіряти layout у режимі Game Preview;
+- аналізувати прозорість через Inspector PRO;
+- працювати з assets;
+- використовувати шаблони;
+- групувати widgets;
+- копіювати стилі;
+- готувати layout для DayZ мода.
+
+---
+
+# 2. Для чого він створювався
+
+Спочатку задача була проста: зробити інструмент, який може відкрити DayZ `.layout` і показати його візуально.
+
+Проблема була така:
+
+- Workbench не завжди зручний;
+- редагувати `.layout` вручну важко;
+- позиції й розміри треба постійно тестувати в грі;
+- прозорість у редакторі й у грі може виглядати по-різному;
+- частина GUI-елементів не видно, якщо неправильно задані `position`, `size`, `alpha`, `halign`, `valign`;
+- потрібен швидкий інструмент для меню штрафстоянки, craft preview, NPC-меню, гаража, трейдера та інших DayZ GUI.
+
+---
+
+# 3. Коротка історія розробки
+
+## V1 — перша тестова версія
+
+Перша версія була простим HTML-файлом.
+
+Вона вміла:
+
+- відкривати `.layout`;
+- показувати базові widgets;
+- рухати блоки мишкою;
+- міняти розмір;
+- копіювати готовий layout назад.
+
+Це була тестова основа, щоб перевірити саму ідею.
+
+---
+
+## V2 — фікс відкриття `fd_craft_preview.layout`
+
+У V1 були проблеми з відкриттям деяких layout-файлів.
+
+У V2 було додано:
+
+- покращений parser `.layout`;
+- drag & drop;
+- повідомлення про помилки;
+- автоматичний приклад для craft preview layout.
+
+---
+
+## V3 — відкриття будь-якого layout
+
+У V3 було змінено логіку:
+
+- редактор більше не відкривав автоматично один конкретний файл;
+- користувач сам вибирає будь-який `.layout`;
+- можна перетягувати layout у вікно;
+- можна редагувати різні GUI-файли.
+
+Це зробило редактор універсальним.
+
+---
+
+## V4 — PRO-версія
+
+У V4 редактор став схожим на справжню програму.
+
+Було додано:
+
+- дерево widgets;
+- інспектор;
+- grid;
+- snap;
+- zoom;
+- undo / redo;
+- додавання widgets;
+- видалення widgets;
+- дублювання;
+- front / back;
+- гарячі клавіші;
+- експорт `.layout`.
+
+---
+
+## V5 — Circular JSON Fix
+
+У V4 була помилка:
 
 ```text
-name
-type
-position
-size
-color
-text
-font
-text color
-text size
-priority
-visible
-ignore pointer
-clip children
-halign
-valign
+Converting circular structure to JSON
+```
+
+Вона виникала через `parent`-посилання в дереві widgets.
+
+У V5 було виправлено:
+
+- Undo / Redo;
+- дублювання widgets;
+- збереження історії без circular structure.
+
+---
+
+## V6 — Relative Layout Fix
+
+Частина DayZ layout використовує відносні координати:
+
+```text
+position 0.08 0.08
+size 0.84 0.78
+```
+
+V5 сприймав такі значення як пікселі, і layout міг бути майже невидимим.
+
+У V6 було додано підтримку:
+
+```text
 hexactpos
 vexactpos
 hexactsize
@@ -56,45 +150,360 @@ vexactsize
 
 ---
 
-## Як запустити
+## V7 — Auto Relative Fix
 
-1. Завантажити архів:
+У деяких layout-файлах відносні координати були вказані без exact-флагів.
+
+V7 навчився автоматично розуміти:
+
+```text
+0.08
+0.84
+0.5
+1
+```
+
+як relative values, якщо exact-флаг не прописаний.
+
+Також було покращено:
+
+- кольори;
+- alpha 0-255;
+- text color;
+- `halign`;
+- `valign`.
+
+---
+
+## V8 — Anchor Fix
+
+У layout `fdis_impound_menu.layout` слово `ЭВАКУАТОР` частково не показувалось.
+
+Причина: DayZ використовує `halign right` як прив’язку самого widget, а редактор враховував тільки вирівнювання тексту.
+
+У V8 було виправлено:
+
+- `halign right`;
+- `halign center`;
+- `valign bottom`;
+- `valign center`.
+
+---
+
+## V9 — UI Tools
+
+У V9 було додано більше інструментів інтерфейсу:
+
+- теми редактора;
+- список DayZ-шрифтів;
+- Center X;
+- Center Y;
+- Center;
+- Safe Area;
+- покращений preview blur / panel стилів.
+
+---
+
+## V10 — Neon 3D UI
+
+У V10 було перероблено зовнішній вигляд самого редактора.
+
+Додано:
+
+- 3D-кнопки;
+- неонова підсвітка;
+- перемикач Neon ON / OFF;
+- вибір кольору акценту;
+- красивіший glow панелей і сцени.
+
+---
+
+## V11 — Game Preview
+
+У V11 було додано режим:
+
+```text
+Game Preview
+```
+
+Він дозволяє бачити layout ближче до вигляду в грі.
+
+Додано:
+
+- приховання редакторських рамок;
+- приховання resize handles;
+- canvas 1920x1080;
+- можливість завантажити скрін із DayZ як фон;
+- готові фони: grass, forest, night, inventory.
+
+---
+
+## V12 — No Game Note
+
+У V11 внизу показувався службовий напис:
+
+```text
+V11 Game Preview: можно загрузить свой скрин из DayZ как фон
+```
+
+У V12 цей напис було прибрано.
+
+---
+
+## V13 — True DayZ Transparency
+
+У грі layout виглядав прозоріше, ніж у редакторі.
+
+V13 додав режим:
+
+```text
+True Alpha ON / OFF
+```
+
+Цей режим прибирає fake glow / fake shadow і показує прозорість ближче до реального DayZ.
+
+---
+
+## V14 — Game Buttons
+
+У V14 було перероблено preview кнопок, щоб вони виглядали ближче до кнопок DayZ.
+
+Додано:
+
+- темно-сірий стиль кнопок;
+- верхній блік;
+- м’яка рамка;
+- білий текст із тінню.
+
+---
+
+## V15 — In-game Highlight
+
+У V15 було додано підсвічування, ближче до DayZ.
+
+Додано:
+
+- glow для заголовків;
+- glow для секцій;
+- кращий вигляд labels;
+- темні / скляні панелі;
+- Game Glow ON / OFF.
+
+---
+
+## V16 — Color Hover
+
+Користувач попросив, щоб не тільки кнопка "Оновити", а всі widgets підсвічувались при наведенні.
+
+У V16 додано:
+
+- hover glow для всіх widgets;
+- колір hover береться із `color` / `textColor`;
+- працює для text, buttons, panels, image, item preview.
+
+---
+
+## V17 — Uniform Buttons
+
+Зелена кнопка "Оновити" виглядала окремо від інших.
+
+У V17 було прибрано:
+
+- автоматичний зелений стиль;
+- Button Accent;
+- Button state.
+
+Тепер усі кнопки виглядають однаково.
+
+---
+
+## V18 — Asset Viewer
+
+У V18 було додано відкриття інших GUI / asset файлів.
+
+Підтримуються:
+
+```text
+.png
+.jpg
+.jpeg
+.webp
+.gif
+.bmp
+.svg
+.layout
+.json
+.xml
+.cpp
+.c
+.h
+.rvmat
+.emat
+.txt
+.csv
+.paa
+.edds
+.tga
+```
+
+Asset Viewer дозволяє:
+
+- переглядати картинки;
+- читати текстові файли;
+- бачити `.paa` / `.edds` як DayZ texture assets;
+- ставити PNG/JPG/WEBP як фон Game Preview.
+
+---
+
+## V19 — Responsive Topbar
+
+Через велику кількість кнопок верхня панель почала обрізатись.
+
+У V19 було зроблено:
+
+- адаптивний toolbar;
+- перенос кнопок на новий ряд;
+- автоматичну висоту верхньої панелі;
+- компактніші кнопки й select-поля.
+
+---
+
+## V20 — PAA / EDDS Preview Helper
+
+Браузер не може напряму показати `.paa` / `.edds`.
+
+У V20 додано helper:
+
+```text
+button_bg.paa
+button_bg.png
+```
+
+Якщо поруч є PNG/JPG/WEBP з такою самою назвою, редактор показує його як preview для `.paa` / `.edds`.
+
+---
+
+## V21 — Layout Inspector PRO
+
+У V21 редактор почав сам знаходити проблеми layout.
+
+Inspector PRO перевіряє:
+
+- занадто прозорі панелі;
+- нульовий або маленький size;
+- текст, який може обрізатися;
+- маленький ItemPreviewWidget;
+- widgets за межами layout;
+- buttons без text.
+
+Додано:
+
+- Auto Fix Alpha;
+- Copy Report;
+- вибір першої проблеми;
+- Hide selected;
+- Lock selected;
+- Align tools;
+- Color Picker.
+
+---
+
+## V22 — MultiSelect + Guides
+
+У V22 додано:
+
+- MultiSelect;
+- Ctrl / Shift + Click;
+- рамка виділення;
+- рух групи widgets;
+- guides;
+- snap до країв і центру;
+- snap до інших widgets;
+- жовта рамка multi-selected;
+- рух групи стрілками.
+
+---
+
+## V23 — Group + Distribute
+
+У V23 додано:
+
+- Dist H;
+- Dist V;
+- Group;
+- Ungroup;
+- spacing labels;
+- `Ctrl + G`;
+- `Ctrl + Shift + G`.
+
+Це дозволяє рівномірно розкладати кнопки й об’єднувати групи widgets.
+
+---
+
+## V24 — Tree + Styles + Templates
+
+V24 — поточна основна версія.
+
+Додано:
+
+- Tree Collapse / Expand;
+- Smart Copy Style;
+- Smart Paste Style;
+- Template Presets;
+- Distance Measure;
+- NPC Menu template;
+- Vehicle Card template;
+- Button Row template;
+- Notify Popup template.
+
+---
+
+# 4. Як завантажити й запустити
+
+## Крок 1 — Завантажити архів
+
+Файл:
 
 ```text
 FD_DayZ_Layout_Visual_Editor_PRO_V24_TREE_STYLES_TEMPLATES.zip
 ```
 
-2. Розпакувати ZIP у будь-яку папку.
+## Крок 2 — Розпакувати
 
-3. Відкрити HTML-файл:
+Розпакувати ZIP у будь-яку папку, наприклад:
+
+```text
+D:\DayZ_Tools\FD_DayZ_Layout_Visual_Editor\
+```
+
+## Крок 3 — Відкрити HTML
+
+Відкрити файл:
 
 ```text
 FD_DayZ_Layout_Visual_Editor_PRO_V24_TREE_STYLES_TEMPLATES.html
 ```
 
-4. Редактор відкриється у браузері.
+Можна відкривати в:
 
-5. Натиснути:
+- Google Chrome;
+- Microsoft Edge;
+- Opera;
+- Firefox.
 
-```text
-Открыть .layout
-```
-
-6. Вибрати потрібний DayZ layout-файл.
+Рекомендовано Chrome або Edge.
 
 ---
 
-## Як користуватись
+# 5. Як відкрити layout
 
-### Відкрити layout
-
-Натисни кнопку:
+1. Натиснути кнопку:
 
 ```text
 Открыть .layout
 ```
 
-Після цього вибери файл, наприклад:
+2. Вибрати файл, наприклад:
 
 ```text
 fdis_impound_menu.layout
@@ -102,71 +511,163 @@ fd_craft_preview.layout
 my_custom_menu.layout
 ```
 
-Після відкриття ти побачиш:
+3. Після відкриття з’явиться:
 
-```text
-зліва — дерево widgets
-по центру — візуальне вікно layout
-справа — інспектор властивостей
-```
+- зліва — дерево widgets;
+- по центру — сцена;
+- справа — інспектор.
 
 ---
 
-## Редагування елементів
+# 6. Основні частини інтерфейсу
 
-### Перемістити widget
+## Верхня панель
 
-1. Клікни по елементу.
-2. Затисни ліву кнопку миші.
-3. Перетягни в потрібне місце.
-
-### Змінити розмір
-
-1. Вибери widget.
-2. Потягни за жовтий кут.
-3. Розмір зміниться.
-
-### Точне редагування
-
-У правій панелі можна вручну прописати:
+Тут знаходяться кнопки:
 
 ```text
-Position X / Y
-Size W / H
-Color RGBA
+Открыть .layout
+Открыть GUI/Assets
+Inspector PRO
+MultiSelect
+Guides
+Game Preview
+True Alpha
+Game Glow
+Color Hover
+Скачать
+Копировать
+Undo
+Redo
+Zoom
+Grid
+Snap
+Safe Area
+Neon
+Theme
+Preset
+```
+
+## Ліва панель
+
+Містить:
+
+- дерево widgets;
+- пошук;
+- buttons для delete / duplicate / hide / lock;
+- align tools;
+- group tools;
+- templates.
+
+## Центральна сцена
+
+Тут видно layout.
+
+Можна:
+
+- клікати;
+- рухати;
+- resize;
+- виділяти кілька widgets;
+- бачити guides;
+- бачити Game Preview.
+
+## Права панель
+
+Інспектор властивостей.
+
+Можна змінювати:
+
+```text
+Name
+Type
+Position
+Size
+Color
 Text
+Font
+Text color
 Priority
 Visible
+Exact flags
 ```
 
 ---
 
-## Color Picker
+# 7. Як редагувати widget
 
-У редакторі є зручний вибір кольору.
+## Вибрати widget
 
-Можна вибрати колір мишкою, а alpha-прозорість окремо виставити в полі `A`.
+Клікнути по ньому на сцені або в дереві.
 
-Приклад кольору:
+## Перемістити
+
+Затиснути мишкою і перетягнути.
+
+## Змінити розмір
+
+Потягнути за жовтий кут.
+
+## Змінити текст
+
+У правій панелі знайти поле:
+
+```text
+Text
+```
+
+і змінити напис.
+
+## Змінити колір
+
+У правій панелі змінити:
+
+```text
+Color RGBA
+```
+
+або використати Color Picker.
+
+---
+
+# 8. Як працює alpha / прозорість
+
+Приклад:
+
+```text
+color 0 0 0 0.55
+```
+
+Означає:
+
+- `0 0 0` — чорний колір;
+- `0.55` — 55% непрозорості.
+
+Якщо в грі меню занадто прозоре, треба підняти alpha:
 
 ```text
 color 0 0 0 0.85
 ```
 
-Де:
+або:
 
 ```text
-0 0 0 = чорний колір
-0.85 = прозорість
+color 0 0 0 0.95
+```
+
+Для перевірки використовуй:
+
+```text
+True Alpha ON
+Inspector PRO
+Auto Fix Alpha
 ```
 
 ---
 
-## MultiSelect
+# 9. Як працює MultiSelect
 
-Редактор підтримує вибір кількох widgets одночасно.
-
-### Як вибрати кілька елементів
+## Вибрати кілька widgets
 
 ```text
 Ctrl + Click
@@ -174,63 +675,58 @@ Shift + Click
 Cmd + Click
 ```
 
-Або потягни мишкою по пустому місцю сцени — з’явиться рамка виділення.
+Або протягнути рамку по пустому місцю сцени.
 
-### Що можна робити з групою
+## Що можна робити з групою
+
+- рухати;
+- видаляти;
+- дублювати;
+- вирівнювати;
+- робити Copy / Paste Style;
+- Group / Ungroup;
+- Dist H / Dist V.
+
+---
+
+# 10. Як працюють Guides
+
+Guides показують зелені лінії при перетягуванні.
+
+Snap відбувається до:
+
+- країв сцени;
+- центру сцени;
+- країв widgets;
+- центру widgets.
+
+Можна вимкнути:
 
 ```text
-рухати
-видаляти
-дублювати
-вирівнювати
-міняти розмір
-копіювати стиль
-застосовувати стиль
-групувати
-розгруповувати
+Guides OFF
+Snap OFF
 ```
 
 ---
 
-## Guides і Snap
+# 11. Dist H / Dist V
 
-Редактор має направляючі лінії.
+## Dist H
 
-Вони допомагають рівно виставляти widgets.
+Для рівномірного розкладання по горизонталі.
 
-Snap працює до:
-
-```text
-країв сцени
-центру сцени
-країв інших widgets
-центру інших widgets
-```
-
-Кнопки:
-
-```text
-Guides ON / OFF
-Snap ON / OFF
-```
-
----
-
-## Dist H / Dist V
-
-### Dist H
-
-Рівномірно розкладає selected widgets по горизонталі.
-
-Потрібно виділити мінімум 3 елементи.
+1. Виділити 3 або більше widgets.
+2. Натиснути:
 
 ```text
 Dist H
 ```
 
-### Dist V
+Перший і останній лишаються на місці, середні розподіляються між ними.
 
-Рівномірно розкладає selected widgets по вертикалі.
+## Dist V
+
+Те саме по вертикалі.
 
 ```text
 Dist V
@@ -238,21 +734,23 @@ Dist V
 
 ---
 
-## Group / Ungroup
+# 12. Group / Ungroup
 
-### Group
+## Group
 
-Об’єднує кілька widgets у group wrapper.
+1. Виділити кілька widgets.
+2. Натиснути:
 
 ```text
 Group
 ```
 
-Після цього групу можна рухати як один блок.
+Widgets будуть об’єднані в wrapper group.
 
-### Ungroup
+## Ungroup
 
-Розпаковує group wrapper назад.
+1. Вибрати group wrapper.
+2. Натиснути:
 
 ```text
 Ungroup
@@ -261,17 +759,17 @@ Ungroup
 Гарячі клавіші:
 
 ```text
-Ctrl + G = Group
-Ctrl + Shift + G = Ungroup
+Ctrl + G
+Ctrl + Shift + G
 ```
 
 ---
 
-## Copy Style / Paste Style
+# 13. Copy Style / Paste Style
 
-Можна скопіювати стиль одного widget і застосувати до інших.
+## Copy Style
 
-### Copy Style копіює:
+Копіює стиль одного widget:
 
 ```text
 color
@@ -284,47 +782,44 @@ halign
 valign
 ```
 
-### Як користуватись
+## Paste Style
 
-1. Вибери кнопку або текст.
-2. Натисни:
+Застосовує стиль до selected widgets.
 
-```text
-Copy Style
-```
+Приклад:
 
-3. Виділи інші widgets.
-4. Натисни:
-
-```text
-Paste Style
-```
+1. Вибрати кнопку.
+2. Натиснути `Copy Style`.
+3. Виділити інші кнопки.
+4. Натиснути `Paste Style`.
 
 Гарячі клавіші:
 
 ```text
-Ctrl + Shift + C = Copy Style
-Ctrl + Shift + V = Paste Style
+Ctrl + Shift + C
+Ctrl + Shift + V
 ```
 
 ---
 
-## Tree Collapse / Expand
+# 14. Tree Collapse / Expand
 
-У дереві widgets можна згортати й розгортати елементи.
+У дереві можна згортати і розгортати groups.
+
+Кнопки:
 
 ```text
 Collapse
 Expand
 ```
 
-Це зручно для великих layout-файлів, де багато вкладених елементів.
+Так зручніше працювати з великими layout.
 
 ---
 
-## Templates
+# 15. Templates
 
-У редакторі є готові шаблони:
+V24 має готові шаблони:
 
 ```text
 NPC Menu
@@ -333,44 +828,61 @@ Button Row
 Notify Popup
 ```
 
-Шаблон додається як готова група widgets. Його можна рухати, редагувати, змінювати текст, кольори й розміри.
+## NPC Menu
+
+Шаблон для NPC-меню.
+
+## Vehicle Card
+
+Шаблон картки транспорту.
+
+## Button Row
+
+Шаблон ряду кнопок.
+
+## Notify Popup
+
+Шаблон повідомлення.
+
+Після додавання шаблон можна редагувати як звичайну group.
 
 ---
 
-## Layout Inspector PRO
+# 16. Inspector PRO
 
-Inspector PRO допомагає знайти проблеми layout до запуску гри.
-
-Кнопка:
+Відкривається кнопкою:
 
 ```text
 Inspector PRO
 ```
 
-### Що перевіряє
+## Аналіз layout
+
+Натиснути:
 
 ```text
-занадто прозорі panel/frame
-нульовий або дуже маленький size
-текст, який може обрізатися
-маленький ItemPreviewWidget
-widgets за межами layout
-buttons без text
+Аналізувати layout
 ```
 
-### Auto Fix Alpha
+Редактор покаже проблеми.
 
-Якщо в грі меню занадто прозоре, можна натиснути:
+## Auto Fix Alpha
+
+Натиснути:
 
 ```text
 Auto Fix Alpha
 ```
 
-Редактор підніме alpha у занадто прозорих темних панелей.
+Редактор підніме прозорість темних панелей.
+
+## Copy Report
+
+Копіює звіт про проблеми.
 
 ---
 
-## Game Preview
+# 17. Game Preview
 
 Кнопка:
 
@@ -378,30 +890,24 @@ Auto Fix Alpha
 Game Preview
 ```
 
-Цей режим показує layout ближче до того, як він буде виглядати в DayZ.
+У цьому режимі:
 
-У Game Preview:
-
-```text
-ховаються рамки редактора
-ховаються resize handles
-layout виглядає чистіше
-можна поставити скрін із гри як фон
-```
-
----
+- ховаються рамки редактора;
+- ховаються resize handles;
+- layout виглядає чистіше;
+- можна перевірити вигляд на фоні гри.
 
 ## Фон із гри
 
-Можна завантажити власний скрін із DayZ як фон.
-
-1. Натисни:
+Натиснути:
 
 ```text
 Фон игры
 ```
 
-2. Вибери картинку:
+Вибрати screenshot з DayZ.
+
+Підтримується:
 
 ```text
 .png
@@ -409,63 +915,41 @@ layout виглядає чистіше
 .webp
 ```
 
-3. Увімкни:
-
-```text
-Game Preview
-```
-
-Так можна перевірити, як меню виглядатиме прямо на фоні гри.
-
 ---
 
-## True DayZ Transparency
+# 18. True DayZ Transparency
 
 Кнопка:
 
 ```text
-True Alpha ON / OFF
+True Alpha ON
 ```
 
-Цей режим показує прозорість ближче до DayZ.
+Цей режим показує прозорість ближче до гри.
 
-Якщо в цьому режимі панелі занадто прозорі — треба підняти alpha в `color`.
-
-Приклад:
-
-```text
-color 0 0 0 0.55
-```
-
-можна змінити на:
-
-```text
-color 0 0 0 0.85
-```
+Якщо в цьому режимі фон занадто прозорий — треба змінити `color alpha`.
 
 ---
 
-## Color Hover
+# 19. Color Hover
 
 Кнопка:
 
 ```text
-Color Hover ON / OFF
+Color Hover ON
 ```
 
-При наведенні курсора widget підсвічується кольором, який прописаний у нього в layout.
+При наведенні курсора widget підсвічується своїм кольором.
 
 ---
 
-## Asset Viewer
+# 20. Asset Viewer
 
 Кнопка:
 
 ```text
 Открыть GUI/Assets
 ```
-
-Дозволяє відкривати додаткові GUI-файли й assets.
 
 Підтримуються:
 
@@ -494,7 +978,7 @@ Color Hover ON / OFF
 
 ---
 
-## PAA / EDDS Preview Helper
+# 21. PAA / EDDS Preview Helper
 
 Браузер не може напряму показувати:
 
@@ -503,55 +987,36 @@ Color Hover ON / OFF
 .edds
 ```
 
-Тому редактор використовує PNG preview pair.
+Тому використовується PNG-пара.
 
-### Приклад
+Приклад:
 
 ```text
 button_bg.paa
 button_bg.png
 ```
 
-Якщо відкрити обидва файли через Asset Viewer, редактор покаже `button_bg.png` як preview для `button_bg.paa`.
-
-У самому DayZ layout можна залишати шлях до `.paa`.
+Відкрий обидва файли через Assets, і редактор покаже PNG як preview для PAA.
 
 ---
 
-## ItemPreviewWidget
+# 22. ItemPreviewWidget
 
-`ItemPreviewWidget` у браузері показується як placeholder:
+У браузері `ItemPreviewWidget` показується як:
 
 ```text
 ITEM PREVIEW
 ```
 
-Це нормально, бо браузер не може рендерити справжню 3D-модель DayZ.
+Це нормально.
 
-У грі `ItemPreviewWidget` буде працювати через DayZ, якщо layout і скрипт налаштовані правильно.
-
----
-
-## Гарячі клавіші
-
-```text
-Ctrl + Z = Undo
-Ctrl + Y = Redo
-Delete = видалити selected widget
-Ctrl + G = Group
-Ctrl + Shift + G = Ungroup
-Ctrl + Shift + C = Copy Style
-Ctrl + Shift + V = Paste Style
-Arrow keys = рухати selected widget
-Shift + Arrow keys = змінювати розмір
-Ctrl + Arrow keys = рухати більшим кроком
-```
+Справжню 3D-модель покаже тільки DayZ.
 
 ---
 
-## Як зберегти layout
+# 23. Як зберегти layout
 
-Після редагування натисни:
+Натиснути:
 
 ```text
 Скачать
@@ -559,19 +1024,15 @@ Ctrl + Arrow keys = рухати більшим кроком
 
 Редактор завантажить edited `.layout`.
 
-Потім треба замінити старий файл layout у твоєму DayZ моді.
+Потім:
 
-Приклад шляху:
-
-```text
-MyMod/gui/layouts/my_menu.layout
-```
-
-Після цього перепакуй PBO і перевір у грі.
+1. Замінити layout у моді.
+2. Перепакувати PBO.
+3. Перевірити в DayZ.
 
 ---
 
-## Рекомендований workflow
+# 24. Рекомендований workflow
 
 1. Зробити backup старого `.layout`.
 2. Відкрити layout у редакторі.
@@ -579,18 +1040,37 @@ MyMod/gui/layouts/my_menu.layout
 4. Увімкнути Game Preview.
 5. Увімкнути True Alpha.
 6. Запустити Inspector PRO.
-7. Якщо треба — Auto Fix Alpha.
-8. Перевірити Guides і Distance.
-9. Натиснути Скачать.
-10. Замінити layout у моді.
-11. Перепакувати PBO.
-12. Перевірити в DayZ.
+7. Якщо потрібно — Auto Fix Alpha.
+8. Перевірити Guides.
+9. Перевірити Distance.
+10. Натиснути Скачать.
+11. Замінити layout у моді.
+12. Перепакувати PBO.
+13. Запустити DayZ.
+14. Перевірити в грі.
 
 ---
 
-## Публікація на GitHub
+# 25. Гарячі клавіші
 
-Рекомендована структура:
+```text
+Ctrl + Z = Undo
+Ctrl + Y = Redo
+Delete = Delete selected
+Ctrl + G = Group
+Ctrl + Shift + G = Ungroup
+Ctrl + Shift + C = Copy Style
+Ctrl + Shift + V = Paste Style
+Arrow keys = Move selected
+Shift + Arrow keys = Resize selected
+Ctrl + Arrow keys = Bigger move step
+```
+
+---
+
+# 26. Публікація на GitHub
+
+## Рекомендована структура репозиторію
 
 ```text
 FD_DayZ_Layout_Visual_Editor/
@@ -605,17 +1085,13 @@ FD_DayZ_Layout_Visual_Editor/
 └── CHANGELOG.md
 ```
 
----
-
-## Опис для GitHub
+## Опис репозиторію
 
 ```text
 Visual browser-based DayZ GUI .layout editor with Game Preview, Inspector PRO, MultiSelect, Guides, Templates, Asset Viewer and PAA/EDDS Preview Helper.
 ```
 
----
-
-## Topics для GitHub
+## Topics
 
 ```text
 dayz
@@ -633,22 +1109,20 @@ html-editor
 
 ---
 
-## Обмеження
+# 27. Обмеження
 
 Редактор не є повною заміною Workbench.
 
 Обмеження:
 
-```text
-не рендерить справжні 3D-моделі DayZ
-не декодує напряму .paa / .edds
-ItemPreviewWidget показується як placeholder
-фінальний результат завжди треба перевіряти в DayZ
-```
+- не рендерить справжні 3D-моделі DayZ;
+- не декодує напряму `.paa` / `.edds`;
+- ItemPreviewWidget показує placeholder;
+- фінальний результат треба перевіряти в DayZ.
 
 ---
 
-## Рекомендовані інструменти поруч
+# 28. Рекомендовані інструменти поруч
 
 ```text
 Visual Studio Code
@@ -664,7 +1138,7 @@ Noesis
 
 ---
 
-## License
+# 29. License
 
 Рекомендована ліцензія:
 
@@ -674,6 +1148,7 @@ MIT License
 
 ---
 
-## Credits
+# 30. Credits
 
 Created for DayZ modding and GUI layout editing.
+
